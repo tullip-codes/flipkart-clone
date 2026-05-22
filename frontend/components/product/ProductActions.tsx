@@ -1,66 +1,94 @@
 "use client";
 
 import { useState } from "react";
-import { ShoppingCart, Zap } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ShoppingCart, Zap, CheckCircle, Loader2 } from "lucide-react";
 import type { ProductDetail } from "@/types/product";
+import { cartApi } from "@/services/api";
 
 interface ProductActionsProps {
   product: ProductDetail;
 }
 
-/**
- * ProductActions — client component owning CTA buttons.
- *
- * Isolated as a client component so the parent detail page remains
- * a server component (better SEO, faster FCP).
- *
- * Cart logic is intentionally a stub here — the Cart module
- * (next phase) will wire this up to a cart context/API.
- */
 export default function ProductActions({ product }: ProductActionsProps) {
-  const [addedToCart, setAddedToCart] = useState(false);
+  const router = useRouter();
+  const [cartState, setCartState] = useState<"idle" | "loading" | "added">("idle");
+  const [error, setError] = useState<string | null>(null);
   const isOutOfStock = product.stock === 0;
 
-  const handleAddToCart = () => {
-    // TODO: wire to CartContext in Cart module phase
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 2000);
+  const handleAddToCart = async () => {
+    if (cartState === "loading" || cartState === "added") return;
+    setError(null);
+    setCartState("loading");
+
+    try {
+      await cartApi.addToCart(product.id, 1);
+      setCartState("added"); // stays "added" permanently — no setTimeout reset
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Failed to add to cart");
+      setCartState("idle");
+    }
   };
 
-  const handleBuyNow = () => {
-    // TODO: navigate to checkout with this product pre-filled
-    window.location.href = "/checkout";
+  const handleBuyNow = async () => {
+    setError(null);
+    try {
+      await cartApi.addToCart(product.id, 1);
+      router.push("/checkout");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Something went wrong");
+    }
   };
 
   return (
-    <div className="flex flex-col sm:flex-row gap-3">
-      <button
-        onClick={handleAddToCart}
-        disabled={isOutOfStock}
-        className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded font-semibold text-sm transition-all ${
-          addedToCart
-            ? "bg-green-500 text-white"
-            : isOutOfStock
-            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-            : "bg-amber-400 hover:bg-amber-500 text-gray-900"
-        }`}
-      >
-        <ShoppingCart className="w-4 h-4" />
-        {addedToCart ? "Added to Cart ✓" : "Add to Cart"}
-      </button>
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-col sm:flex-row gap-3">
 
-      <button
-        onClick={handleBuyNow}
-        disabled={isOutOfStock}
-        className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded font-semibold text-sm transition-colors ${
-          isOutOfStock
-            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-            : "bg-orange-500 hover:bg-orange-600 text-white"
-        }`}
-      >
-        <Zap className="w-4 h-4" />
-        Buy Now
-      </button>
+        {/* Add to Cart / Go to Cart */}
+        <button
+          onClick={cartState === "added" ? () => router.push("/cart") : handleAddToCart}
+          disabled={isOutOfStock || cartState === "loading"}
+          className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded font-semibold text-sm transition-all ${
+            cartState === "added"
+              ? "bg-green-500 hover:bg-green-600 text-white"
+              : isOutOfStock || cartState === "loading"
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-amber-400 hover:bg-amber-500 text-gray-900"
+          }`}
+        >
+          {cartState === "loading" ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : cartState === "added" ? (
+            <CheckCircle className="w-4 h-4" />
+          ) : (
+            <ShoppingCart className="w-4 h-4" />
+          )}
+          {cartState === "loading"
+            ? "Adding..."
+            : cartState === "added"
+            ? "Go to Cart"
+            : "Add to Cart"}
+        </button>
+
+        {/* Buy Now */}
+        <button
+          onClick={handleBuyNow}
+          disabled={isOutOfStock}
+          className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded font-semibold text-sm transition-colors ${
+            isOutOfStock
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-orange-500 hover:bg-orange-600 text-white"
+          }`}
+        >
+          <Zap className="w-4 h-4" />
+          Buy Now
+        </button>
+      </div>
+
+      {/* Error message */}
+      {error && (
+        <p className="text-xs text-red-500 text-center">{error}</p>
+      )}
     </div>
   );
 }

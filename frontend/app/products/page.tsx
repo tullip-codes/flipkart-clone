@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { SlidersHorizontal } from "lucide-react";
+import { useState, useMemo, useCallback, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { useProducts } from "@/hooks/useProducts";
 import { useCategories } from "@/hooks/useCategories";
@@ -13,44 +12,49 @@ import Pagination from "@/components/common/Pagination";
 import SortDropdown from "@/components/common/SortDropdown";
 import type { ProductFilters, SortOption } from "@/types/product";
 
-/**
- * ProductsPage — main listing page.
- *
- * Architecture notes:
- * - All filter state lives in this component and is passed down as props.
- * - useSearchParams lets users bookmark/share filtered URLs.
- * - useProducts handles the actual API call with debounced filters.
- */
 export default function ProductsPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
 
-  // Initialise state from URL search params (for shareable URLs)
-  const [search, setSearch] = useState(searchParams.get("search") ?? "");
+  const [search, setSearch]       = useState(searchParams.get("search") ?? "");
   const [categoryId, setCategoryId] = useState<number | null>(
     searchParams.get("category_id") ? Number(searchParams.get("category_id")) : null
   );
   const [sortBy, setSortBy] = useState<SortOption>("created_at");
-  const [page, setPage] = useState(1);
+  const [page, setPage]     = useState(1);
+
+  // ── KEY FIX: re-sync local state whenever the URL changes ─────────────────
+  // When the user clicks a navbar category link, Next.js updates searchParams
+  // but the component state doesn't update automatically (it's initialised once).
+  // This effect keeps state in sync with the URL on every navigation.
+  useEffect(() => {
+    const urlSearch     = searchParams.get("search") ?? "";
+    const urlCategoryId = searchParams.get("category_id")
+      ? Number(searchParams.get("category_id"))
+      : null;
+
+    setSearch(urlSearch);
+    setCategoryId(urlCategoryId);
+    setPage(1); // always reset to page 1 on URL-driven navigation
+  }, [searchParams]);
 
   const { categories, isLoading: categoriesLoading } = useCategories();
 
-  // Memoised so useProducts doesn't re-fetch on unrelated renders
   const filters: ProductFilters = useMemo(
     () => ({
-      search: search || undefined,
+      search:      search || undefined,
       category_id: categoryId ?? undefined,
-      sort_by: sortBy,
-      order: "desc",
+      sort_by:     sortBy,
+      order:       "desc",
       page,
-      page_size: 20,
+      page_size:   20,
     }),
     [search, categoryId, sortBy, page]
   );
 
   const { products, data, isLoading, error } = useProducts(filters);
 
-  // Reset to page 1 on filter change
+  // These handlers are for the in-page filter controls (SearchBar, CategoryFilter)
+  // They also update the URL so it stays shareable
   const handleSearch = useCallback((val: string) => {
     setSearch(val);
     setPage(1);
@@ -67,19 +71,16 @@ export default function ProductsPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-gray-100">
+    <main className="min-h-screen bg-[#F1F3F6]">
       <div className="max-w-screen-xl mx-auto px-2 sm:px-4 py-4">
 
-        {/* Filters toolbar  */}
+        {/* Search + Sort toolbar */}
         <div className="bg-white rounded-sm shadow-sm px-4 py-3 mb-3 flex flex-col sm:flex-row gap-3">
-          {/* Search */}
           <SearchBar value={search} onChange={handleSearch} />
-
-          {/* Sort */}
           <SortDropdown value={sortBy} onChange={handleSort} />
         </div>
 
-        {/* Category pills  */}
+        {/* Category pills */}
         <div className="bg-white rounded-sm shadow-sm px-4 py-3 mb-3">
           <CategoryFilter
             categories={categories}
@@ -89,7 +90,7 @@ export default function ProductsPage() {
           />
         </div>
 
-        {/* Results count  */}
+        {/* Results count */}
         {!isLoading && data && (
           <p className="text-xs text-gray-500 mb-2 px-1">
             {data.total.toLocaleString("en-IN")} products found
@@ -97,14 +98,14 @@ export default function ProductsPage() {
           </p>
         )}
 
-        {/* Error state  */}
+        {/* Error */}
         {error && (
           <div className="bg-red-50 border border-red-200 rounded p-4 text-center text-red-600 text-sm mb-4">
             {error}
           </div>
         )}
 
-        {/* Product grid  */}
+        {/* Grid */}
         <div className="bg-white rounded-sm shadow-sm overflow-hidden">
           <ProductGrid
             products={products}
@@ -117,7 +118,7 @@ export default function ProductsPage() {
           />
         </div>
 
-        {/* Pagination  */}
+        {/* Pagination */}
         {data && data.total_pages > 1 && (
           <div className="mt-4">
             <Pagination

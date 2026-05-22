@@ -14,10 +14,17 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.database.base import Base
 from app.database.session import engine
-from app.routes import products_router, categories_router, cart_router
 
-# Import models so SQLAlchemy can discover them during Base.metadata.create_all
-import app.models 
+from app.routes import (
+    products_router,
+    categories_router,
+    cart_router,
+    auth_router,
+)
+
+# Import models so SQLAlchemy can discover them
+# during Base.metadata.create_all()
+import app.models  # noqa: F401
 
 
 def create_app() -> FastAPI:
@@ -27,28 +34,61 @@ def create_app() -> FastAPI:
         description="Backend API for the Scaler SDE Intern Fullstack Assignment",
     )
 
-    # CORS 
+    # -----------------------------
+    # Create database tables
+    # -----------------------------
+    Base.metadata.create_all(bind=engine)
+
+    # -----------------------------
+    # CORS Configuration
+    # -----------------------------
     application.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:3000"],   # update for prod deployment
+        allow_origins=[
+            "http://localhost:3000",
+        ],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
 
-    # Routers 
-    application.include_router(products_router, prefix="/api/v1")
-    application.include_router(categories_router, prefix="/api/v1")
-    application.include_router(cart_router, prefix="/api/v1")
+    # -----------------------------
+    # API Routers
+    # -----------------------------
+    application.include_router(
+        products_router,
+        prefix="/api/v1",
+        tags=["Products"],
+    )
 
-    # Events 
-    def on_startup():
-        Base.metadata.create_all(bind=engine)
+    application.include_router(
+        categories_router,
+        prefix="/api/v1",
+        tags=["Categories"],
+    )
 
-    # Health check 
+    application.include_router(
+        cart_router,
+        prefix="/api/v1",
+        tags=["Cart"],
+    )
+
+    application.include_router(
+        auth_router,
+        prefix="/api/v1",
+        tags=["Authentication"],
+    )
+
+    # -----------------------------
+    # Health Check
+    # -----------------------------
     @application.get("/health", tags=["Health"])
     def health_check():
-        return {"status": "ok", "version": "1.0.0"}
+        return {
+            "status": "ok",
+            "version": "1.0.0",
+            "message": "Flipkart Clone API Running",
+        }
 
     return application
 

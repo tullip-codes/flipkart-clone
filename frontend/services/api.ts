@@ -5,13 +5,30 @@ import type {
   ProductListResponse,
   ProductFilters,
 } from "@/types/product";
+import { TOKEN_KEY } from "@/services/authApi"; // single source of truth for key
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1";
 
+function getAuthToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(TOKEN_KEY); // "fk_auth_token"
+}
+
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
+  const token = getAuthToken();
+
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...(options?.headers as Record<string, string> ?? {}),
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   const res = await fetch(`${BASE_URL}${path}`, {
-    headers: { "Content-Type": "application/json" },
     ...options,
+    headers,
   });
 
   if (!res.ok) {
@@ -19,7 +36,6 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
     throw new Error(error.detail ?? `API error ${res.status}`);
   }
 
-  // 204 No Content — nothing to parse
   if (res.status === 204) return undefined as T;
 
   return res.json() as Promise<T>;
