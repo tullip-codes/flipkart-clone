@@ -1,3 +1,11 @@
+/**
+ * Signup page — Flipkart-accurate UI.
+ *
+ * Left panel: "Looks like you're new here!" + subtitle + illustration
+ * Right panel: Full Name → Email → Password → Confirm Password
+ *              → terms → CONTINUE button → "Existing User? Log in"
+ */
+
 "use client";
 
 import React, { useState } from "react";
@@ -27,25 +35,25 @@ function validate(values: FormState): FormErrors {
   const errors: FormErrors = {};
 
   if (!values.full_name.trim()) {
-    errors.full_name = "Full name is required";
+    errors.full_name = "Please enter your full name";
   } else if (values.full_name.trim().length < 2) {
     errors.full_name = "Name must be at least 2 characters";
   }
 
-  if (!values.email) {
-    errors.email = "Email is required";
+  if (!values.email.trim()) {
+    errors.email = "Please enter your email address";
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
     errors.email = "Enter a valid email address";
   }
 
   if (!values.password) {
-    errors.password = "Password is required";
+    errors.password = "Please enter a password";
   } else if (values.password.length < 8) {
     errors.password = "Password must be at least 8 characters";
   } else if (!/\d/.test(values.password)) {
-    errors.password = "Password must contain at least one number";
+    errors.password = "Password must include at least one number";
   } else if (!/[a-zA-Z]/.test(values.password)) {
-    errors.password = "Password must contain at least one letter";
+    errors.password = "Password must include at least one letter";
   }
 
   if (!values.confirm_password) {
@@ -98,7 +106,8 @@ export default function SignupPage() {
       router.push("/");
     } catch (err) {
       setErrors({
-        general: err instanceof Error ? err.message : "Signup failed. Try again.",
+        general:
+          err instanceof Error ? err.message : "Signup failed. Please try again.",
       });
     } finally {
       setIsSubmitting(false);
@@ -106,18 +115,17 @@ export default function SignupPage() {
   }
 
   return (
-    <AuthCard>
-      <h2 className="text-xl font-semibold text-gray-800 mb-6">
-        Create Account
-      </h2>
+    <AuthCard variant="signup">
 
+      {/* General error banner */}
       {errors.general && (
-        <div className="mb-4 rounded-md bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600">
+        <div className="mb-5 rounded bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600">
           {errors.general}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
+      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
+
         <AuthInput
           label="Full Name"
           type="text"
@@ -125,7 +133,6 @@ export default function SignupPage() {
           value={values.full_name}
           onChange={handleChange}
           error={errors.full_name}
-          placeholder="Enter your full name"
           autoComplete="name"
           autoFocus
         />
@@ -137,7 +144,6 @@ export default function SignupPage() {
           value={values.email}
           onChange={handleChange}
           error={errors.email}
-          placeholder="Enter your email"
           autoComplete="email"
         />
 
@@ -148,7 +154,6 @@ export default function SignupPage() {
           value={values.password}
           onChange={handleChange}
           error={errors.password}
-          placeholder="Min 8 characters with a number"
           autoComplete="new-password"
         />
 
@@ -159,42 +164,54 @@ export default function SignupPage() {
           value={values.confirm_password}
           onChange={handleChange}
           error={errors.confirm_password}
-          placeholder="Re-enter your password"
           autoComplete="new-password"
         />
 
-        <p className="text-xs text-gray-500 leading-relaxed">
-          By creating an account, you agree to Flipkart&apos;s{" "}
-          <span className="text-[#2874F0] cursor-pointer hover:underline">
+        {/* Terms */}
+        <p className="text-[13px] text-gray-500 leading-relaxed">
+          By continuing, you agree to Flipkart&apos;s{" "}
+          <Link href="/terms" className="text-[#2874F0] hover:underline">
             Terms of Use
-          </span>{" "}
+          </Link>{" "}
           and{" "}
-          <span className="text-[#2874F0] cursor-pointer hover:underline">
+          <Link href="/privacy" className="text-[#2874F0] hover:underline">
             Privacy Policy
-          </span>
+          </Link>
           .
         </p>
 
+        {/* CONTINUE button */}
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-md bg-[#FB641B] px-4 py-3 text-sm font-semibold
-            text-white transition-all hover:bg-[#e85d18] active:scale-[0.98]
-            disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full bg-[#FB641B] hover:bg-[#f4581a] active:bg-[#e04e16]
+            text-white font-medium text-[14px] tracking-wider uppercase
+            py-3.5 rounded-sm transition-colors
+            disabled:opacity-60 disabled:cursor-not-allowed
+            shadow-sm"
         >
-          {isSubmitting ? "Creating account…" : "Create Account"}
+          {isSubmitting ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+              Creating account…
+            </span>
+          ) : (
+            "Continue"
+          )}
         </button>
+
       </form>
 
-      <div className="mt-6 text-center">
-        <span className="text-sm text-gray-500">Already have an account? </span>
+      {/* Login link at bottom — matches "Existing User? Log in" from screenshot */}
+      <div className="mt-auto pt-10">
         <Link
           href="/auth/login"
-          className="text-sm font-semibold text-[#2874F0] hover:underline"
+          className="block text-center text-[14px] text-[#2874F0] font-medium hover:underline"
         >
-          Login
+          Existing User? Log in
         </Link>
       </div>
+
     </AuthCard>
   );
 }

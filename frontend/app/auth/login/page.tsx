@@ -1,3 +1,12 @@
+/**
+ * Login page — pixel-accurate Flipkart auth UI.
+ *
+ * Layout matches screenshots:
+ * - Left blue panel: "Login" + subtitle + illustration
+ * - Right white panel: underline email input → underline password input
+ *   → terms text → orange CONTINUE button → "New to Flipkart? Create an account"
+ */
+
 "use client";
 
 import React, { useState } from "react";
@@ -21,16 +30,19 @@ interface FormErrors {
 
 function validate(values: FormState): FormErrors {
   const errors: FormErrors = {};
-  if (!values.email) {
-    errors.email = "Email is required";
+
+  if (!values.email.trim()) {
+    errors.email = "Please enter your email address";
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
     errors.email = "Enter a valid email address";
   }
+
   if (!values.password) {
-    errors.password = "Password is required";
+    errors.password = "Please enter your password";
   } else if (values.password.length < 8) {
     errors.password = "Password must be at least 8 characters";
   }
+
   return errors;
 }
 
@@ -45,7 +57,6 @@ export default function LoginPage() {
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setValues((prev) => ({ ...prev, [name]: value }));
-    // Clear field error on change
     if (errors[name as keyof FormErrors]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
@@ -67,7 +78,8 @@ export default function LoginPage() {
       router.push("/");
     } catch (err) {
       setErrors({
-        general: err instanceof Error ? err.message : "Login failed. Try again.",
+        general:
+          err instanceof Error ? err.message : "Login failed. Please try again.",
       });
     } finally {
       setIsSubmitting(false);
@@ -75,73 +87,91 @@ export default function LoginPage() {
   }
 
   return (
-    <AuthCard>
-      <h2 className="text-xl font-semibold text-gray-800 mb-6 md:hidden">
-        Login
-      </h2>
+    <AuthCard variant="login">
 
+      {/* General error banner */}
       {errors.general && (
-        <div className="mb-4 rounded-md bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600">
+        <div className="mb-5 rounded bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600">
           {errors.general}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
+      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-7">
+
+        {/* Email */}
         <AuthInput
-          label="Email Address"
+          label="Enter Email/Mobile number"
           type="email"
           name="email"
           value={values.email}
           onChange={handleChange}
           error={errors.email}
-          placeholder="Enter your email"
           autoComplete="email"
           autoFocus
         />
 
+        {/* Password */}
         <AuthInput
-          label="Password"
+          label="Enter Password"
           type="password"
           name="password"
           value={values.password}
           onChange={handleChange}
           error={errors.password}
-          placeholder="Enter your password"
           autoComplete="current-password"
         />
 
-        <p className="text-xs text-gray-500 leading-relaxed">
+        {/* Terms */}
+        <p className="text-[13px] text-gray-500 leading-relaxed -mt-2">
           By continuing, you agree to Flipkart&apos;s{" "}
-          <span className="text-[#2874F0] cursor-pointer hover:underline">
+          <Link
+            href="/terms"
+            className="text-[#2874F0] hover:underline"
+          >
             Terms of Use
-          </span>{" "}
+          </Link>{" "}
           and{" "}
-          <span className="text-[#2874F0] cursor-pointer hover:underline">
+          <Link
+            href="/privacy"
+            className="text-[#2874F0] hover:underline"
+          >
             Privacy Policy
-          </span>
+          </Link>
           .
         </p>
 
+        {/* CONTINUE button — Flipkart orange, full width, uppercase */}
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-md bg-[#FB641B] px-4 py-3 text-sm font-semibold
-            text-white transition-all hover:bg-[#e85d18] active:scale-[0.98]
-            disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full bg-[#FB641B] hover:bg-[#f4581a] active:bg-[#e04e16]
+            text-white font-medium text-[14px] tracking-wider uppercase
+            py-3.5 rounded-sm transition-colors
+            disabled:opacity-60 disabled:cursor-not-allowed
+            shadow-sm"
         >
-          {isSubmitting ? "Logging in…" : "Login"}
+          {isSubmitting ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+              Logging in…
+            </span>
+          ) : (
+            "Continue"
+          )}
         </button>
+
       </form>
 
-      <div className="mt-6 text-center">
-        <span className="text-sm text-gray-500">New to Flipkart? </span>
+      {/* Divider + signup link — bottom of right panel */}
+      <div className="mt-auto pt-12">
         <Link
           href="/auth/signup"
-          className="text-sm font-semibold text-[#2874F0] hover:underline"
+          className="block text-center text-[14px] text-[#2874F0] font-medium hover:underline"
         >
-          Create an account
+          New to Flipkart? Create an account
         </Link>
       </div>
+
     </AuthCard>
   );
 }

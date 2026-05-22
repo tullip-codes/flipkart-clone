@@ -28,6 +28,8 @@ class User(Base):
 
     # Relationships (cart items already have user_id FK — wire up later)
     cart_items = relationship("CartItem", back_populates="user", lazy="dynamic")
+    # Add alongside cart_items relationship
+    orders = relationship("Order", back_populates="user", lazy="dynamic")
 
     def __repr__(self) -> str:
         return f"<User id={self.id} email={self.email!r}>"

@@ -131,3 +131,23 @@ export const cartApi = {
   clearCart: (): Promise<void> =>
     apiFetch<void>("/cart", { method: "DELETE" }),
 };
+
+// ─── Order Types (re-exported from types/order.ts for API layer use) ──────────
+
+export type { Order, OrderItem, OrderListResponse, PlaceOrderPayload, ShippingAddress } from "@/types/order";
+
+// ─── Order API ────────────────────────────────────────────────────────────────
+
+export const orderApi = {
+  placeOrder: (payload: import("@/types/order").PlaceOrderPayload): Promise<import("@/types/order").Order> =>
+    apiFetch("/orders", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  getMyOrders: (): Promise<import("@/types/order").OrderListResponse> =>
+    apiFetch("/orders"),
+
+  getOrder: (orderNumber: string): Promise<import("@/types/order").Order> =>
+    apiFetch(`/orders/${orderNumber}`),
+};

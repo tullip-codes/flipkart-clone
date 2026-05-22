@@ -20,6 +20,7 @@ from app.routes import (
     categories_router,
     cart_router,
     auth_router,
+    orders_router
 )
 
 # Import models so SQLAlchemy can discover them
@@ -79,6 +80,7 @@ def create_app() -> FastAPI:
         tags=["Authentication"],
     )
 
+    application.include_router(orders_router, prefix="/api/v1", tags=["Orders"])
     # -----------------------------
     # Health Check
     # -----------------------------
