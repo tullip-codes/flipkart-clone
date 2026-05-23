@@ -4,7 +4,6 @@ from sqlalchemy.sql import func
 
 from app.database.base import Base
 
-
 class Category(Base):
     __tablename__ = "categories"
 
@@ -16,7 +15,6 @@ class Category(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # Relationship: one category → many products
     products = relationship("Product", back_populates="category", lazy="dynamic")
 
     def __repr__(self) -> str:

@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class WishlistToggleRequest(BaseModel):        # ← add this
+class WishlistToggleRequest(BaseModel):        
     product_id: int
 
 

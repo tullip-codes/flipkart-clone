@@ -41,7 +41,7 @@ export default function AuthCard({
     <div className="min-h-[calc(100vh-112px)] bg-[#F1F3F6] flex items-start justify-center pt-8 pb-12 px-4">
       <div className="w-full max-w-[750px] flex shadow-md rounded-sm overflow-hidden">
 
-        {/* ── Left blue panel ──────────────────────────────────────────────── */}
+        {/*  Left blue panel  */}
         <div className="hidden md:flex flex-col justify-between bg-[#2874F0] w-[288px] flex-shrink-0 p-10 pb-0">
           <div>
             <h1 className="text-[28px] font-semibold text-white leading-snug">
@@ -58,7 +58,7 @@ export default function AuthCard({
           </div>
         </div>
 
-        {/* ── Right white panel ─────────────────────────────────────────────── */}
+        {/*  Right white panel  */}
         <div className="flex-1 bg-white px-8 py-10 md:px-10">
           {children}
         </div>

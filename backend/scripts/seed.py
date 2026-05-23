@@ -212,9 +212,9 @@ PRODUCTS = [
         "stock": 55,
         "rating": 4.6,
         "rating_count": 4320,
-        "image_url": "https://images.unsplash.com/photo-1585837146751-a44121ebaf1b?w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1648170466098-d9d0b4dcb5c9?w=600&q=80",
         "images": [
-            "https://images.unsplash.com/photo-1585837146751-a44121ebaf1b?w=600&q=80",
+            "https://images.unsplash.com/photo-1648170466098-d9d0b4dcb5c9?w=600&q=80",
         ],
         "specifications": json.dumps({
             "Capacity": "4.1 Litres",

@@ -60,12 +60,12 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen bg-[#F1F3F6]">
 
-      {/* ── Hero Banner — full width ───────────────────────────────────────── */}
+      {/*  Hero Banner — full width  */}
       <div className="max-w-screen-xl mx-auto">
         <HeroBanner />
       </div>
 
-      {/* ── Deal tiles grid — like Flipkart's ad row below banner ─────────── */}
+      {/*  Deal tiles grid — like Flipkart's ad row below banner  */}
       <div className="max-w-screen-xl mx-auto mt-2 px-2">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {DEAL_TILES.map((tile) => (
@@ -96,14 +96,14 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* ── Category strip ─────────────────────────────────────────────────── */}
+      {/*  Category strip    */}
       {categories.length > 0 && (
         <div className="max-w-screen-xl mx-auto mt-2">
           <CategorySection categories={categories} />
         </div>
       )}
 
-      {/* ── Featured products ──────────────────────────────────────────────── */}
+      {/*  Featured products  */}
       <section className="max-w-screen-xl mx-auto mt-3 px-2">
         <div className="bg-white shadow-sm">
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
@@ -119,7 +119,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Trust badges ───────────────────────────────────────────────────── */}
+      {/*  Trust badges  */}
       <section className="max-w-screen-xl mx-auto mt-3 px-2 pb-8">
         <div className="grid grid-cols-3 gap-2">
           {[

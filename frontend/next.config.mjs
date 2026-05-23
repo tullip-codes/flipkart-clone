@@ -6,8 +6,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "plus.unsplash.com",
+      },
     ],
-    // Better image quality defaults
     formats: ["image/webp"],
   },
 };

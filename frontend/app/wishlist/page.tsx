@@ -46,7 +46,7 @@ export default function WishlistPage() {
   return (
     <main className="max-w-screen-xl mx-auto px-3 py-6">
 
-      {/* ── Page header ──────────────────────────────────────────────────── */}
+      {/*  Page header  */}
       <div className="flex items-center justify-between mb-4">
         <div>
           <h1 className="text-xl font-semibold text-gray-800">
@@ -60,20 +60,20 @@ export default function WishlistPage() {
         </div>
       </div>
 
-      {/* ── Error state ────────────────────────────────────────────────────── */}
+      {/*  Error state  */}
       {error && (
         <div className="mb-4 rounded bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600">
           {error}
         </div>
       )}
 
-      {/* ── Loading skeleton ───────────────────────────────────────────────── */}
+      {/*  Loading skeleton  */}
       {isLoading && <WishlistSkeleton />}
 
-      {/* ── Empty state ────────────────────────────────────────────────────── */}
+      {/*  Empty state  */}
       {!isLoading && items.length === 0 && <EmptyWishlist />}
 
-      {/* ── Wishlist grid ─────────────────────────────────────────────────── */}
+      {/*  Wishlist grid  */}
       {!isLoading && items.length > 0 && (
         <WishlistGrid items={items} onRemove={removeItem} />
       )}
@@ -82,7 +82,7 @@ export default function WishlistPage() {
   );
 }
 
-// ── Skeletons ─────────────────────────────────────────────────────────────────
+//  Skeletons 
 
 function PageSkeleton() {
   return (

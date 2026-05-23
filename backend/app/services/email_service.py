@@ -107,7 +107,6 @@ async def send_order_confirmation(
 
     # Determine recipient
     if EMAIL_DEV_OVERRIDE and EMAIL_DEV_OVERRIDE != user_email:
-        # User email is not the verified Resend address — redirect
         logger.info(
             "DEV OVERRIDE: user email '%s' not verified with Resend "
             "— redirecting confirmation email to '%s'",
@@ -116,7 +115,6 @@ async def send_order_confirmation(
         )
         recipient = EMAIL_DEV_OVERRIDE
     else:
-        # Either no override set (production) or user IS the verified address
         recipient = user_email
 
     return await send_email(to=recipient, subject=subject, html=html)

@@ -28,7 +28,7 @@ export default function CheckoutPage() {
   const [errors,  setErrors]  = useState<Partial<ShippingAddress>>({});
   const [orderError, setOrderError] = useState<string | null>(null);  // ← replaces alert
 
-  // ── Validation ────────────────────────────────────────────────────────────
+  //  Validation 
   function validate(): boolean {
     const e: Partial<ShippingAddress> = {};
     if (!address.full_name.trim())        e.full_name = "Name is required";
@@ -96,7 +96,7 @@ export default function CheckoutPage() {
       <div className="max-w-5xl mx-auto px-4">
         <h1 className="text-lg font-semibold text-gray-800 mb-4">Checkout</h1>
 
-        {/* ── Order error banner — replaces browser alert ───────────────── */}
+        {/*  Order error banner — replaces browser alert  */}
         {orderError && (
           <div className="mb-4 bg-red-50 border border-red-200 rounded-sm px-4 py-3 flex items-start gap-3">
             <span className="text-red-500 text-lg leading-none mt-0.5">⚠</span>
@@ -115,7 +115,7 @@ export default function CheckoutPage() {
 
         <div className="flex flex-col lg:flex-row gap-4 items-start">
 
-          {/* ── Left column ───────────────────────────────────────────────── */}
+          {/*  Left column  */}
           <div className="flex-1 w-full space-y-4">
 
             {/* Shipping Address */}
@@ -328,7 +328,7 @@ export default function CheckoutPage() {
   );
 }
 
-// ── Small helpers ──────────────────────────────────────────────────────────────
+//  Small helpers 
 
 function input(err?: string) {
   return `w-full border rounded-sm px-3 py-2 text-sm outline-none transition-colors ${

@@ -14,9 +14,8 @@ import { useAuth } from "@/context/AuthContext";
 const STATIC_NAV = [
   { label: "For You",     slug: null },
   { label: "Fashion",     slug: "fashion" },
-  { label: "Mobiles",     slug: "electronics" },
-  { label: "Beauty",      slug: "beauty" },
   { label: "Electronics", slug: "electronics" },
+  { label: "Beauty",      slug: "beauty" },
   { label: "Home",        slug: "home-furniture" },
   { label: "Appliances",  slug: "home-furniture" },
   { label: "Sports",      slug: "sports-fitness" },

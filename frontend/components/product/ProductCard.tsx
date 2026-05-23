@@ -17,7 +17,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       href={`/products/${product.id}`}
       className="group flex flex-col bg-white rounded-sm border border-gray-100 hover:shadow-lg transition-shadow duration-200 overflow-hidden"
     >
-      {/* ── Image ──────────────────────────────────────────────────────────── */}
+      {/*  Image  */}
       <div className="relative w-full aspect-square bg-gray-50 overflow-hidden">
         <Image
           src={product.image_url ?? "/placeholder-product.png"}
@@ -27,7 +27,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
         />
 
-        {/* ── Wishlist heart — top-right overlay ── */}
+        {/*  Wishlist heart — top-right overlay  */}
         <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
           <WishlistButton productId={product.id} size="sm" />    {/* ← add */}
         </div>
@@ -44,7 +44,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
       </div>
 
-      {/* ── Details — unchanged ───────────────────────────────────────────── */}
+      {/*  Details — unchanged  */}
       <div className="flex flex-col gap-1 p-3 flex-1">
         <p className="text-sm text-gray-800 font-medium line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">
           {product.title}

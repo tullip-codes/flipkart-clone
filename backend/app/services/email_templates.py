@@ -28,7 +28,7 @@ def build_order_confirmation_email(order: Order, user_full_name: str) -> tuple[s
 
     subject = f"Order Confirmed! #{order.order_number} — Thank you for shopping with us"
 
-    # ── Parse shipping address ────────────────────────────────────────────────
+    #  Parse shipping address 
     try:
         addr = json.loads(order.shipping_address)
     except (json.JSONDecodeError, TypeError):
@@ -41,7 +41,7 @@ def build_order_confirmation_email(order: Order, user_full_name: str) -> tuple[s
     shipping_state   = addr.get("state", "")
     shipping_pincode = addr.get("pincode", "")
 
-    # ── Build order items rows ────────────────────────────────────────────────
+    #  Build order items rows 
     items_rows = ""
     for item in order.items:
         items_rows += f"""
@@ -58,7 +58,7 @@ def build_order_confirmation_email(order: Order, user_full_name: str) -> tuple[s
         </tr>
         """
 
-    # ── Payment method label ──────────────────────────────────────────────────
+    #  Payment method label 
     payment_labels = {
         "cod": "Cash on Delivery",
         "upi": "UPI",
@@ -66,7 +66,7 @@ def build_order_confirmation_email(order: Order, user_full_name: str) -> tuple[s
     }
     payment_label = payment_labels.get(order.payment_method, order.payment_method.upper())
 
-    # ── Delivery row — free or charged ────────────────────────────────────────
+    #  Delivery row — free or charged 
     delivery_row = (
         '<tr>'
         '<td style="padding: 6px 0; font-size: 13px; color: #878787;">Delivery</td>'
@@ -75,7 +75,7 @@ def build_order_confirmation_email(order: Order, user_full_name: str) -> tuple[s
         '</td></tr>'
     )
 
-    # ── Discount row — only if applicable ────────────────────────────────────
+    #  Discount row — only if applicable 
     discount_row = ""
     if order.total_discount > 0:
         discount_row = (
@@ -86,10 +86,10 @@ def build_order_confirmation_email(order: Order, user_full_name: str) -> tuple[s
             '</td></tr>'
         )
 
-    # ── Formatted order date ──────────────────────────────────────────────────
+    #  Formatted order date 
     order_date = order.created_at.strftime("%d %B %Y, %I:%M %p") if order.created_at else "—"
 
-    # ── Full HTML ─────────────────────────────────────────────────────────────
+    #  Full HTML 
     html_body = f"""
 <!DOCTYPE html>
 <html lang="en">
@@ -106,7 +106,7 @@ def build_order_confirmation_email(order: Order, user_full_name: str) -> tuple[s
         <table width="100%" cellpadding="0" cellspacing="0"
                style="max-width: 600px; background-color: #ffffff; border-radius: 4px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
 
-          <!-- ── Header ───────────────────────────────────────────────────── -->
+          <!--  Header  -->
           <tr>
             <td style="background-color: #2874F0; padding: 24px 32px;">
               <table width="100%" cellpadding="0" cellspacing="0">
@@ -127,7 +127,7 @@ def build_order_confirmation_email(order: Order, user_full_name: str) -> tuple[s
             </td>
           </tr>
 
-          <!-- ── Hero message ─────────────────────────────────────────────── -->
+          <!--  Hero message  -->
           <tr>
             <td style="padding: 32px 32px 0 32px; text-align: center;">
               <div style="width: 56px; height: 56px; background-color: #E8F5E9; border-radius: 50%;
@@ -145,7 +145,7 @@ def build_order_confirmation_email(order: Order, user_full_name: str) -> tuple[s
             </td>
           </tr>
 
-          <!-- ── Order meta ────────────────────────────────────────────────── -->
+          <!--  Order meta  -->
           <tr>
             <td style="padding: 24px 32px;">
               <table width="100%" cellpadding="0" cellspacing="0"
@@ -177,7 +177,7 @@ def build_order_confirmation_email(order: Order, user_full_name: str) -> tuple[s
             </td>
           </tr>
 
-          <!-- ── Order items ───────────────────────────────────────────────── -->
+          <!--  Order items  -->
           <tr>
             <td style="padding: 0 32px;">
               <h2 style="margin: 0 0 12px 0; font-size: 15px; font-weight: 700;
@@ -191,7 +191,7 @@ def build_order_confirmation_email(order: Order, user_full_name: str) -> tuple[s
             </td>
           </tr>
 
-          <!-- ── Pricing summary ───────────────────────────────────────────── -->
+          <!--  Pricing summary  -->
           <tr>
             <td style="padding: 20px 32px;">
               <table width="100%" cellpadding="0" cellspacing="0"
@@ -218,7 +218,7 @@ def build_order_confirmation_email(order: Order, user_full_name: str) -> tuple[s
             </td>
           </tr>
 
-          <!-- ── Shipping address ──────────────────────────────────────────── -->
+          <!--  Shipping address   -->
           <tr>
             <td style="padding: 0 32px 24px 32px;">
               <h2 style="margin: 0 0 12px 0; font-size: 15px; font-weight: 700;
@@ -237,7 +237,7 @@ def build_order_confirmation_email(order: Order, user_full_name: str) -> tuple[s
             </td>
           </tr>
 
-          <!-- ── Delivery note ─────────────────────────────────────────────── -->
+          <!--  Delivery note  -->
           <tr>
             <td style="padding: 0 32px 24px 32px;">
               <table width="100%" cellpadding="0" cellspacing="0"
@@ -252,7 +252,7 @@ def build_order_confirmation_email(order: Order, user_full_name: str) -> tuple[s
             </td>
           </tr>
 
-          <!-- ── Footer ───────────────────────────────────────────────────── -->
+          <!--  Footer   -->
           <tr>
             <td style="background-color: #F8F9FA; padding: 20px 32px; border-top: 1px solid #f0f0f0;">
               <p style="margin: 0; font-size: 12px; color: #878787; text-align: center; line-height: 1.8;">

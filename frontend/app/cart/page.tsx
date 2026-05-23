@@ -1,5 +1,3 @@
-// FILE: frontend/app/cart/page.tsx
-
 "use client";
 
 import { useState } from "react";
@@ -11,7 +9,7 @@ import { ShoppingCart, Loader2 } from "lucide-react";
 
 export default function CartPage() {
   const { cart, loading, error, updateQuantity, removeItem } = useCart();
-  // Track which item_id is currently being mutated for local loading state
+ 
   const [updatingId, setUpdatingId] = useState<number | null>(null);
 
   const handleQuantityChange = async (item_id: number, qty: number) => {
@@ -32,7 +30,7 @@ export default function CartPage() {
     }
   };
 
-  // ── Loading state ────────────────────────────────────────────────────────
+  //  Loading state 
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F1F3F6] flex items-center justify-center">
@@ -41,7 +39,7 @@ export default function CartPage() {
     );
   }
 
-  // ── Error state ──────────────────────────────────────────────────────────
+  //  Error state 
   if (error) {
     return (
       <div className="min-h-screen bg-[#F1F3F6] flex items-center justify-center">
@@ -53,7 +51,7 @@ export default function CartPage() {
     );
   }
 
-  // ── Empty cart ───────────────────────────────────────────────────────────
+  //  Empty cart 
   if (!cart || cart.items.length === 0) {
     return (
       <div className="min-h-screen bg-[#F1F3F6]">
@@ -64,7 +62,7 @@ export default function CartPage() {
     );
   }
 
-  // ── Cart with items ──────────────────────────────────────────────────────
+  //  Cart with items 
   return (
     <div className="min-h-screen bg-[#F1F3F6]">
       <div className="max-w-5xl mx-auto px-4 py-6">

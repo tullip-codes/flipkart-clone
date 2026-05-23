@@ -12,7 +12,7 @@ Built as part of the **Scaler SDE Intern Fullstack Assignment**
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Deployed on Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
-[Live Demo](#) · [API Docs](#) · [Report Bug](#)
+[Live Demo](https://flipkart-clone-kk87.vercel.app/) · [API Docs](https://flipkart-clone-hhit.onrender.com/docs) · [Report Bug](https://github.com/tullip-codes/flipkart-clone/issues)
 
 </div>
 
@@ -39,45 +39,46 @@ Built as part of the **Scaler SDE Intern Fullstack Assignment**
 
 ## 🚀 Live Demo
 
-| Service    | URL                                      |
-|------------|------------------------------------------|
-| Frontend   | [flipkart-clone.vercel.app](#)           |
-| Backend API| [api.flipkart-clone.onrender.com](#)     |
-| API Docs   | [/docs](#) (FastAPI Swagger UI)          |
+| Service     | URL                                                              |
+|-------------|------------------------------------------------------------------|
+| Frontend    | https://flipkart-clone-kk87.vercel.app/                         |
+| Backend API | https://flipkart-clone-hhit.onrender.com                        |
+| API Docs    | https://flipkart-clone-hhit.onrender.com/docs                   |
 
 ### Demo Credentials
 
 ```
-Email:    demo@flipkartclone.com
-Password: Demo@1234
+Email:    harshitayadav504@gmail.com
+Password: 12345678h
 ```
 
-> A pre-seeded guest account with sample cart and order history is available for evaluation.
+> This account has pre-existing cart items and order history for evaluation purposes.
 
 ---
 
 ## 📸 Screenshots
 
 ### Homepage
-![Homepage](./docs/homepage.png)
+![Homepage](./screenshots/homepage.png)
+
 
 ### Product Listing
-![Product Listing](./docs/products.png)
+![Product Listing](./screenshots/products.png)
 
 ### Product Detail Page
-![Product Detail](./docs/product-detail.png)
+![Product Detail](./screenshots/product-detail.png)
 
 ### Shopping Cart
-![Cart](./docs/cart.png)
+![Cart](./screenshots/cart.png)
 
 ### Checkout
-![Checkout](./docs/checkout.png)
+![Checkout](./screenshots/checkout.png)
 
 ### Wishlist
-![Wishlist](./docs/wishlist.png)
+![Wishlist](./screenshots/wishlist.png)
 
 ### Order History
-![Order History](./docs/orders.png)
+![Order History](./screenshots/orders.png)
 
 ---
 
@@ -91,16 +92,16 @@ Password: Demo@1234
 | **Search & Filter** | Real-time search by name, filter by category, sort by price/rating/discount |
 | **Product Detail** | Image carousel, specifications table, stock status, rating display |
 | **Shopping Cart** | Add/update/remove items, quantity controls, live subtotal calculation, delivery pricing |
-| **Checkout Flow** | Address form with validation, payment method selection, order summary |
+| **Checkout Flow** | Address form with validation, payment method selection, sticky order summary |
 | **Order Placement** | Atomic cart-to-order conversion, unique order ID generation, cart auto-clear |
-| **Order History** | Full order listing and per-order detail view with item snapshots |
+| **Order History** | Full order listing and per-order detail view with immutable item snapshots |
 | **Authentication** | JWT-based signup/login, protected routes, persistent sessions via localStorage |
 
 ### Bonus Features
 
 | Feature | Description |
 |---|---|
-| **Wishlist** | Add/remove products, persisted per user |
+| **Wishlist** | Add/remove products, persisted per user in the database |
 | **Email Notifications** | Order confirmation emails via Resend API |
 | **Responsive Design** | Full mobile, tablet, and desktop support using Tailwind responsive utilities |
 | **Loading States** | Skeleton loaders and spinner states across all async operations |
@@ -121,7 +122,7 @@ Password: Demo@1234
 | Auth | JWT (python-jose + bcrypt) | Stateless, scalable, standard for REST APIs |
 | Email | Resend API | Developer-friendly transactional email service |
 | Frontend Deploy | Vercel | Zero-config Next.js deployment, CDN-backed |
-| Backend Deploy | Render / Railway | Managed Python hosting with auto-deploy from GitHub |
+| Backend Deploy | Render | Managed Python hosting with auto-deploy from GitHub |
 
 ---
 
@@ -134,10 +135,10 @@ Password: Demo@1234
 │                                                             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
 │  │  Pages   │  │Components│  │  Hooks   │  │ Services │   │
-│  │ /app     │  │/components│ │ useCart  │  │ api.ts   │   │
-│  │ /products│  │  product/ │ │ useOrders│  │ authApi  │   │
-│  │ /cart    │  │  cart/    │ │ useAuth  │  │          │   │
-│  │ /checkout│  │  common/  │ └──────────┘  └────┬─────┘   │
+│  │ /app     │  │ product/ │  │ useCart  │  │ api.ts   │   │
+│  │ /products│  │ cart/    │  │ useOrders│  │ authApi  │   │
+│  │ /cart    │  │ common/  │  │ useAuth  │  │          │   │
+│  │ /checkout│  │ layout/  │  └──────────┘  └────┬─────┘   │
 │  │ /orders  │  └──────────┘                     │         │
 │  └──────────┘                                   │ fetch()  │
 └─────────────────────────────────────────────────┼─────────┘
@@ -168,7 +169,7 @@ Password: Demo@1234
 - **Modular frontend** — each feature (cart, orders, products) has its own components, hooks, and API slice
 - **Centralised API layer** — all `fetch` calls live in `services/api.ts`; no ad-hoc fetching in components
 - **Immutable order history** — `OrderItem` snapshots `title` and `unit_price` at purchase time; price changes never corrupt history
-- **Atomic order placement** — cart → order conversion and cart clear happen in a single DB transaction
+- **Atomic order placement** — cart-to-order conversion and cart clear happen in a single DB transaction
 
 ---
 
@@ -222,11 +223,11 @@ flipkart-clone/
 │   │   ├── schemas/                 # Pydantic request/response schemas
 │   │   ├── routes/                  # FastAPI route handlers
 │   │   ├── services/                # Business logic layer
-│   │   ├── utils/                   # Auth utilities (JWT, hashing)
+│   │   ├── utils/                   # Auth utilities (JWT, bcrypt)
 │   │   └── main.py                  # App factory + router registration
 │   ├── scripts/
 │   │   └── seed.py                  # Database seeding script
-│   ├── .env                         # Environment variables
+│   ├── .env                         # Environment variables (not committed)
 │   └── requirements.txt
 │
 └── docs/                            # Screenshots for README
@@ -262,7 +263,7 @@ users ──────┬────── cart_items ────── prod
 
 ### Design Decisions
 
-- **Shipping address as JSON column** on `orders` — avoids an extra `addresses` table for a simple struct; easy to extend later
+- **Shipping address as JSON column** on `orders` — avoids an extra `addresses` table for a simple struct; straightforward to extend later
 - **Denormalised order items** — price and title copied at checkout; ensures immutable order history
 - **Soft categorisation** — products have an optional `category_id`; uncategorised products still list correctly
 - **`is_guest` flag on users** — allows seeding a default user without a password for demo purposes
@@ -292,7 +293,7 @@ users ──────┬────── cart_items ────── prod
 
 | Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| GET | `/api/v1/cart` | Get cart with summary | ✅ |
+| GET | `/api/v1/cart` | Get cart with calculated summary | ✅ |
 | POST | `/api/v1/cart` | Add item (increments if exists) | ✅ |
 | PATCH | `/api/v1/cart/{item_id}` | Update quantity | ✅ |
 | DELETE | `/api/v1/cart/{item_id}` | Remove single item | ✅ |
@@ -314,7 +315,7 @@ users ──────┬────── cart_items ────── prod
 | POST | `/api/v1/wishlist/{product_id}` | Add to wishlist | ✅ |
 | DELETE | `/api/v1/wishlist/{product_id}` | Remove from wishlist | ✅ |
 
-> Full interactive API documentation available at `/docs` (Swagger UI) and `/redoc` when the backend is running.
+> Full interactive API documentation available at [`/docs`](https://flipkart-clone-hhit.onrender.com/docs) (Swagger UI).
 
 ---
 
@@ -338,7 +339,7 @@ FROM_EMAIL=orders@yourdomain.com
 ### Frontend — `frontend/.env.local`
 
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+NEXT_PUBLIC_API_URL=https://flipkart-clone-hhit.onrender.com/api/v1
 ```
 
 ---
@@ -354,7 +355,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/harshitaydavv/flipkart-clone.git
+git clone https://github.com/tullip-codes/flipkart-clone.git
 cd flipkart-clone
 ```
 
@@ -382,8 +383,8 @@ python scripts/seed.py
 uvicorn app.main:app --reload
 ```
 
-Backend runs at `http://localhost:8000`
-Swagger docs at `http://localhost:8000/docs`
+Backend runs at `http://localhost:8000`  
+API docs at `http://localhost:8000/docs`
 
 ### 3. Frontend setup
 
@@ -412,7 +413,7 @@ Frontend runs at `http://localhost:3000`
 1. Push repository to GitHub
 2. Import project in [Vercel Dashboard](https://vercel.com)
 3. Set root directory to `frontend`
-4. Add environment variable: `NEXT_PUBLIC_API_URL=<your-render-backend-url>/api/v1`
+4. Add environment variable: `NEXT_PUBLIC_API_URL=https://flipkart-clone-hhit.onrender.com/api/v1`
 5. Deploy — Vercel auto-detects Next.js configuration
 
 ### Backend → Render
@@ -442,10 +443,11 @@ Frontend runs at `http://localhost:3000`
 | **PostgreSQL over MongoDB** | The data is inherently relational — users have orders, orders have items, products have categories. RDBMS enforces integrity at the DB level, not the application layer. |
 | **SQLAlchemy ORM** | Declarative models make relationships explicit and readable. `create_all` made local table management frictionless during development. |
 | **Tailwind CSS** | Utility-first approach kept styling co-located with markup. No context switching between CSS files. Responsive utilities (`sm:`, `lg:`) made mobile-first layout straightforward. |
-| **JWT in localStorage** | Acceptable for this scope. Token key is centralised (`TOKEN_KEY` constant) to avoid drift. In production, `httpOnly` cookies would be used. |
+| **JWT in localStorage** | Acceptable for this scope. Token key is centralised (`TOKEN_KEY` constant) to avoid drift. In production, `httpOnly` cookies would be preferred. |
 | **Modular service layer** | Business logic is separated from route handlers in every module. Routes handle HTTP concerns only; services are independently testable and reusable. |
 | **Immutable OrderItems** | `unit_price` and `title` are snapshotted at checkout. This is standard e-commerce practice — price changes must never alter historical records. |
 | **Atomic order placement** | Cart-to-order conversion and cart clearing happen in a single `db.flush()` + `db.commit()` transaction. Either everything succeeds or nothing does. |
+| **bcrypt direct over passlib** | `passlib` is unmaintained and incompatible with `bcrypt` 4.x on Python 3.14. Replaced with direct `bcrypt` calls for production stability. |
 
 ---
 
@@ -458,17 +460,16 @@ Frontend runs at `http://localhost:3000`
 - **Real payment gateway** — Razorpay or Stripe integration for actual payment processing
 - **httpOnly cookie auth** — replace localStorage JWT with secure, httpOnly cookies
 - **Image uploads** — Cloudinary or S3 integration for product image management
-- **Search service** — Elasticsearch or Typesense for full-text product search at scale
 - **Unit + integration tests** — pytest for backend services, Jest for frontend hooks
 
 ---
 
 ## 👩‍💻 Author
 
-**Harshita Yadav**
+**Harshita Yadav**  
 B.Tech, IIIT Kota · SDE Intern Candidate
 
-[![GitHub](https://img.shields.io/badge/GitHub-harshitaydavv-181717?style=flat-square&logo=github)](https://github.com/harshitaydavv)
+[![GitHub](https://img.shields.io/badge/GitHub-tullip--codes-181717?style=flat-square&logo=github)](https://github.com/harshitaydavv)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Harshita_Yadav-0077B5?style=flat-square&logo=linkedin)](https://linkedin.com/in/harshitayadav504)
 
 ---

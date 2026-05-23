@@ -21,10 +21,10 @@ from app.routes import (
     cart_router,
     auth_router,
     orders_router,
-    wishlist_router,              # ← only addition
+    wishlist_router,              
 )
 
-import app.models  # noqa: F401
+import app.models  
 
 
 def create_app() -> FastAPI:

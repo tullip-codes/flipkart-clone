@@ -1,4 +1,3 @@
-// FILE: frontend/components/cart/CartSummaryPanel.tsx
 
 "use client";
 

@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from typing import Generator
 
-load_dotenv()  # ← this was missing
+load_dotenv()  
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:

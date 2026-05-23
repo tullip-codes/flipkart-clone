@@ -4,7 +4,7 @@ from datetime import datetime
 from app.models.order import OrderStatus
 
 
-# ── Shipping Address ──────────────────────────────────────────────────────────
+# Shipping Address 
 
 class ShippingAddress(BaseModel):
     full_name: str  = Field(..., min_length=2, max_length=100)
@@ -15,14 +15,14 @@ class ShippingAddress(BaseModel):
     pincode:   str  = Field(..., min_length=6, max_length=10)
 
 
-# ── Request ───────────────────────────────────────────────────────────────────
+# Request 
 
 class PlaceOrderRequest(BaseModel):
     shipping_address: ShippingAddress
     payment_method:   str = Field(default="cod", pattern="^(cod|upi|card)$")
 
 
-# ── Response ──────────────────────────────────────────────────────────────────
+# Response
 
 class OrderItemResponse(BaseModel):
     id:          int
