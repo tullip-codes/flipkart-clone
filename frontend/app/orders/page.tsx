@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useOrders } from "@/hooks/useOrders";
-import { parseShippingAddress, ORDER_STATUS_LABEL, ORDER_STATUS_COLOR, formatOrderDate } from "@/utils/order";
+import { ORDER_STATUS_LABEL, ORDER_STATUS_COLOR, formatOrderDate } from "@/utils/order";
 import { Package, ShoppingBag, ChevronRight, Loader2 } from "lucide-react";
 import Image from "next/image";
 
@@ -33,7 +33,7 @@ export default function OrdersPage() {
           </div>
           <h2 className="text-lg font-semibold text-gray-800 mb-2">No orders yet</h2>
           <p className="text-gray-500 text-sm mb-6 max-w-xs">
-            Looks like you haven't placed any orders. Start shopping!
+            Looks like You haven&apos;t placed any orders. Start shopping!
           </p>
           <button onClick={() => router.push("/products")}
             className="bg-[#2874F0] text-white font-semibold px-8 py-3 rounded-sm text-sm hover:bg-blue-700 transition-colors">
