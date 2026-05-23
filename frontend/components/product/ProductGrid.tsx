@@ -1,22 +1,14 @@
-import type { ProductCard } from "@/types/product";
+import type { ProductCard as ProductCardType } from "@/types/product";
 import ProductCard from "./ProductCard";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 
 interface ProductGridProps {
-  products: ProductCard[];
+  products: ProductCardType[];
   isLoading?: boolean;
   skeletonCount?: number;
   emptyMessage?: string;
 }
 
-/**
- * ProductGrid — renders a responsive CSS grid of product cards.
- *
- * Handles three states:
- *  1. Loading  → skeleton placeholders
- *  2. Empty    → contextual empty state message
- *  3. Loaded   → actual product cards
- */
 export default function ProductGrid({
   products,
   isLoading = false,
