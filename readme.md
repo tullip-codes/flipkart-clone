@@ -469,7 +469,7 @@ Frontend runs at `http://localhost:3000`
 B.Tech, IIIT Kota · SDE Intern Candidate
 
 [![GitHub](https://img.shields.io/badge/GitHub-harshitaydavv-181717?style=flat-square&logo=github)](https://github.com/harshitaydavv)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Harshita_Yadav-0077B5?style=flat-square&logo=linkedin)](https://linkedin.com/in/harshitayadav)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Harshita_Yadav-0077B5?style=flat-square&logo=linkedin)](https://linkedin.com/in/harshitayadav504)
 
 ---
 
