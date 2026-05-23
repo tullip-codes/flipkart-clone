@@ -5,13 +5,13 @@ import type {
   ProductListResponse,
   ProductFilters,
 } from "@/types/product";
-import { TOKEN_KEY } from "@/services/authApi"; // single source of truth for key
+import { TOKEN_KEY } from "@/services/authApi";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1";
 
 function getAuthToken(): string | null {
   if (typeof window === "undefined") return null;
-  return localStorage.getItem(TOKEN_KEY); // "fk_auth_token"
+  return localStorage.getItem(TOKEN_KEY);
 }
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
@@ -33,15 +33,34 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
 
   if (!res.ok) {
     const error = await res.json().catch(() => ({ detail: "Unknown error" }));
-    throw new Error(error.detail ?? `API error ${res.status}`);
+
+    // detail can be a string OR a FastAPI 422 validation array
+    // e.g. [{ loc: ["body", "shipping_address", "phone"], msg: "...", type: "..." }]
+    let message = `API error ${res.status}`;
+    if (typeof error.detail === "string") {
+      message = error.detail;
+    } else if (Array.isArray(error.detail)) {
+      message = error.detail
+        .map((e: { msg?: string; loc?: string[] }) =>
+          e.loc
+            ? `${e.loc.filter(l => l !== "body").join(" → ")}: ${e.msg}`
+            : (e.msg ?? "Validation error")
+        )
+        .join(" | ");
+    } else if (error.detail !== undefined) {
+      message = JSON.stringify(error.detail);
+    }
+
+    throw new Error(message);
   }
 
   if (res.status === 204) return undefined as T;
-
   return res.json() as Promise<T>;
 }
 
-function buildQuery(params: Record<string, string | number | boolean | undefined>): string {
+function buildQuery(
+  params: Record<string, string | number | boolean | undefined>
+): string {
   const qs = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
     if (value !== undefined && value !== null && value !== "") {
@@ -56,7 +75,9 @@ function buildQuery(params: Record<string, string | number | boolean | undefined
 
 export const productApi = {
   list: (filters: ProductFilters = {}): Promise<ProductListResponse> => {
-    const query = buildQuery(filters as Record<string, string | number | boolean | undefined>);
+    const query = buildQuery(
+      filters as Record<string, string | number | boolean | undefined>
+    );
     return apiFetch<ProductListResponse>(`/products${query}`);
   },
 
@@ -132,14 +153,22 @@ export const cartApi = {
     apiFetch<void>("/cart", { method: "DELETE" }),
 };
 
-// ─── Order Types (re-exported from types/order.ts for API layer use) ──────────
+// ─── Order Types ──────────────────────────────────────────────────────────────
 
-export type { Order, OrderItem, OrderListResponse, PlaceOrderPayload, ShippingAddress } from "@/types/order";
+export type {
+  Order,
+  OrderItem,
+  OrderListResponse,
+  PlaceOrderPayload,
+  ShippingAddress,
+} from "@/types/order";
 
 // ─── Order API ────────────────────────────────────────────────────────────────
 
 export const orderApi = {
-  placeOrder: (payload: import("@/types/order").PlaceOrderPayload): Promise<import("@/types/order").Order> =>
+  placeOrder: (
+    payload: import("@/types/order").PlaceOrderPayload
+  ): Promise<import("@/types/order").Order> =>
     apiFetch("/orders", {
       method: "POST",
       body: JSON.stringify(payload),

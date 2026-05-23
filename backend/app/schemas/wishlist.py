@@ -1,17 +1,12 @@
-"""
-Pydantic schemas for Wishlist.
-
-WishlistItemResponse embeds the full ProductCard snapshot so the
-frontend never needs a second request to render the wishlist page.
-"""
-
 from datetime import datetime
 from typing import Optional
-
 from pydantic import BaseModel
 
 
-# Embedded product snapshot — mirrors ProductCard on the frontend
+class WishlistToggleRequest(BaseModel):        # ← add this
+    product_id: int
+
+
 class WishlistProductSnapshot(BaseModel):
     id: int
     title: str
@@ -45,7 +40,6 @@ class WishlistResponse(BaseModel):
 
 
 class WishlistToggleResponse(BaseModel):
-    """Returned by the toggle endpoint — client uses `wishlisted` to update UI."""
     wishlisted: bool
     product_id: int
     message: str
