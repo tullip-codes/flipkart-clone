@@ -2,20 +2,18 @@
 Authentication utilities.
 
 Responsibilities:
-- Password hashing / verification (bcrypt via passlib)
+- Password hashing / verification (bcrypt direct — passlib removed for Python 3.14 compatibility)
 - JWT creation / decoding (python-jose)
 - FastAPI dependency: get_current_user
-
-Kept intentionally simple — no refresh tokens, no revocation list.
 """
 
 from datetime import datetime, timedelta
 from typing import Optional
 
+import bcrypt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
 from app.database.connection import get_db
@@ -28,19 +26,16 @@ import os
 
 SECRET_KEY = os.getenv("JWT_SECRET_KEY", "change-me-in-production-please")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "10080"))  # 7 days
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "10080"))
 
 # ── Password hashing ──────────────────────────────────────────────────────────
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
 def hash_password(plain: str) -> str:
-    return pwd_context.hash(plain)
+    return bcrypt.hashpw(plain.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
 
 def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
+    return bcrypt.checkpw(plain.encode("utf-8"), hashed.encode("utf-8"))
 
 
 # ── JWT ───────────────────────────────────────────────────────────────────────
@@ -63,7 +58,7 @@ def decode_token(token: str) -> Optional[TokenPayload]:
         return None
 
 
-# ── FastAPI dependency ─────────────────────────────────────────────────────────
+# ── FastAPI dependency ────────────────────────────────────────────────────────
 
 bearer_scheme = HTTPBearer(auto_error=False)
 
@@ -72,10 +67,6 @@ def get_current_user(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(bearer_scheme),
     db: Session = Depends(get_db),
 ) -> User:
-    """
-    Validates the Bearer token and returns the authenticated User.
-    Raises 401 if token is missing, malformed, or expired.
-    """
     if credentials is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -105,10 +96,6 @@ def get_optional_user(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(bearer_scheme),
     db: Session = Depends(get_db),
 ) -> Optional[User]:
-    """
-    Like get_current_user but returns None instead of raising 401.
-    Use on routes that work for both guests and logged-in users.
-    """
     if credentials is None:
         return None
     payload = decode_token(credentials.credentials)
