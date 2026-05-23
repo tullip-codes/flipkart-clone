@@ -19,8 +19,6 @@ const STATIC_NAV = [
   { label: "Electronics", slug: "electronics" },
   { label: "Home",        slug: "home-furniture" },
   { label: "Appliances",  slug: "home-furniture" },
-  { label: "Toys, Ba...", slug: null },
-  { label: "Food & H...", slug: null },
   { label: "Sports",      slug: "sports-fitness" },
   { label: "Furniture",   slug: "home-furniture" },
 ];
@@ -201,10 +199,7 @@ export default function Navbar() {
               )}
             </div>
 
-            <button className="flex items-center gap-1 text-white px-3 h-9 text-sm font-medium hover:bg-blue-600 rounded-sm transition-colors">
-              <span>More</span>
-              <ChevronDown className="w-3.5 h-3.5" />
-            </button>
+            
 
             <Link href="/cart" className="flex items-center gap-2 text-white px-3 h-9 text-sm font-medium hover:bg-blue-600 rounded-sm transition-colors">
               <ShoppingCart className="w-5 h-5" /><span>Cart</span>
