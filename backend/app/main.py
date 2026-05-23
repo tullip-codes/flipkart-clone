@@ -20,11 +20,10 @@ from app.routes import (
     categories_router,
     cart_router,
     auth_router,
-    orders_router
+    orders_router,
+    wishlist_router,              # ← only addition
 )
 
-# Import models so SQLAlchemy can discover them
-# during Base.metadata.create_all()
 import app.models  # noqa: F401
 
 
@@ -35,14 +34,8 @@ def create_app() -> FastAPI:
         description="Backend API for the Scaler SDE Intern Fullstack Assignment",
     )
 
-    # -----------------------------
-    # Create database tables
-    # -----------------------------
     Base.metadata.create_all(bind=engine)
 
-    # -----------------------------
-    # CORS Configuration
-    # -----------------------------
     application.add_middleware(
         CORSMiddleware,
         allow_origins=[
@@ -53,37 +46,13 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # -----------------------------
-    # API Routers
-    # -----------------------------
-    application.include_router(
-        products_router,
-        prefix="/api/v1",
-        tags=["Products"],
-    )
+    application.include_router(products_router,    prefix="/api/v1", tags=["Products"])
+    application.include_router(categories_router,  prefix="/api/v1", tags=["Categories"])
+    application.include_router(cart_router,        prefix="/api/v1", tags=["Cart"])
+    application.include_router(auth_router,        prefix="/api/v1", tags=["Authentication"])
+    application.include_router(orders_router,      prefix="/api/v1", tags=["Orders"])
+    application.include_router(wishlist_router,    prefix="/api/v1", tags=["Wishlist"])  # ← only addition
 
-    application.include_router(
-        categories_router,
-        prefix="/api/v1",
-        tags=["Categories"],
-    )
-
-    application.include_router(
-        cart_router,
-        prefix="/api/v1",
-        tags=["Cart"],
-    )
-
-    application.include_router(
-        auth_router,
-        prefix="/api/v1",
-        tags=["Authentication"],
-    )
-
-    application.include_router(orders_router, prefix="/api/v1", tags=["Orders"])
-    # -----------------------------
-    # Health Check
-    # -----------------------------
     @application.get("/health", tags=["Health"])
     def health_check():
         return {
